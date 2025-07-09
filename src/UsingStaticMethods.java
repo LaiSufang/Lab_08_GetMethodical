@@ -16,11 +16,17 @@ public class UsingStaticMethods {
         // check out items:
          Checkout(in);
 
-        SafeInput.prettyHeader("This is a pretty header!");
+        // get a string using a pattern
+        Reggie(in);
 
-        SafeInput.getRegExString(in, "Enter your ssn [000-00-0000]: ", "^\\d{3}-\\d{2}-\\d{4}$");
-        SafeInput.getRegExString(in, "Enter your UC Student M number [M00000]: ", "^(M|m)\\d{5}$");
-        SafeInput.getRegExString(in, "Enter a menu choice [OoSsVvQq]: ", "^[OoSsVvQq]$");
+        // get a header in a certain format:
+        GetPrettyHeader(in);
+
+        // display c to f temp table:
+        System.out.println("Celsius     Fahrenheit");
+        for (double tempC = -100; tempC <= 100; tempC += 1) {
+            System.out.printf("%-8.2f\t%-8.2f\n", tempC,  CtoF(tempC));
+        }
 
     }
 
@@ -42,17 +48,18 @@ public class UsingStaticMethods {
         // Note: use a switch() conditional selector structure to limit the user to the correct number of days for the month they were born in.
         // For instance if they were born in Feb [1-29], Oct [1-31].
         // HINT: there are only 3 groups here not 12 different ones!
-        int birthDay = 0;
-        int birthYear = SafeInput.getRangedInt(in, "Enter the year of your birth [1950-2015]: ", 1950, 2015);
-        int birthMonth = SafeInput.getRangedInt(in, "Enter the month of your birth [1-12]: ", 1, 12);
+        int birthYear, birthMonth, birthDay, birthHour, birthMinute;
+        birthYear = SafeInput.getRangedInt(in, "Enter the year of your birth [1950-2015]: ", 1950, 2015);
+        birthMonth = SafeInput.getRangedInt(in, "Enter the month of your birth [1-12]: ", 1, 12);
+        // get the birthDay based on the birthMonth
         birthDay = switch (birthMonth) {
-            case 1, 3, 5, 7, 8, 10, 12 -> SafeInput.getRangedInt(in, "Enter the day of your birth [1-31]: ", 1, 31);
-            case 4, 6, 9, 11 -> SafeInput.getRangedInt(in, "Enter the day of your birth [1-30]: ", 1, 30);
             case 2 -> SafeInput.getRangedInt(in, "Enter the day of your birth [1-29]: ", 1, 29);
-            default -> birthDay;
+            case 4, 6, 9, 11 -> SafeInput.getRangedInt(in, "Enter the day of your birth [1-30]: ", 1, 30);
+            // the rest of the months would have 31 days: case 1, 3, 5, 7, 8, 10, 12
+            default -> SafeInput.getRangedInt(in, "Enter the day of your birth [1-31]: ", 1, 31);
         };
-        int birthHour = SafeInput.getRangedInt(in, "Enter the hour of your birth [1-24]: ", 1, 24);
-        int birthMinute = SafeInput.getRangedInt(in, "Enter the minute of your birth [1-59]: ", 1, 59);
+        birthHour = SafeInput.getRangedInt(in, "Enter the hour of your birth [1-24]: ", 1, 24);
+        birthMinute = SafeInput.getRangedInt(in, "Enter the minute of your birth [1-59]: ", 1, 59);
         System.out.printf("You were born on %d/%d/%d at %d:%d.\n", birthMonth, birthDay, birthYear, birthHour, birthMinute);
     }
 
@@ -73,5 +80,31 @@ public class UsingStaticMethods {
             hadMoreItems = SafeInput.getYNConfirm(in, "Do you have more items? (y/n): ");
         } while (hadMoreItems);
         System.out.printf("The total cost of your items is $%.2f\n", totalCost);
+    }
+
+    public static void Reggie(Scanner in) {
+        String ssn, mNumber, menuChoice;
+
+        ssn = SafeInput.getRegExString(in, "Enter your SSN using this pattern [123-12-1234]: ", "^\\d{3}-\\d{2}-\\d{4}$");
+        System.out.println("Your SSN is: " + ssn);
+
+        mNumber = SafeInput.getRegExString(in, "Enter your UC Student M number in this pattern [M12345]: ", "^(M|m)\\d{5}$");
+        System.out.printf("Your M number is: %s\n", mNumber);
+
+        menuChoice = SafeInput.getRegExString(in, "Enter a menu choice [OoSsVvQq]: ", "^[OoSsVvQq]$");
+        System.out.println("You choice: " + menuChoice);
+    }
+
+    private static void GetPrettyHeader(Scanner in) {
+        String prettyHeader;
+        do {
+            prettyHeader = SafeInput.getNonZeroLenString(in, "Please enter your Pretty Header within 30 characters: ");
+        } while (prettyHeader.length() > 30);
+
+        SafeInput.prettyHeader(prettyHeader);
+    }
+
+    public static double CtoF(double tempC) {
+        return (tempC * 9/5) + 32;
     }
 }

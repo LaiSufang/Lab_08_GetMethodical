@@ -121,7 +121,7 @@ public class SafeInput {
     }
 
     // get a string in a given patten:
-    public static void getRegExString(Scanner scanner, String prompt, String regEx) {
+    public static String getRegExString(Scanner scanner, String prompt, String regEx) {
         String retString;
         boolean validString = false;
         do {
@@ -133,6 +133,8 @@ public class SafeInput {
                 System.out.println("Invalid input. Please enter a valid string.");
             }
         } while (!validString);
+
+        return retString;
     }
 
     // formatting a header:
